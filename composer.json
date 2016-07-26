@@ -1,0 +1,22 @@
+{
+    "name": "jwaldock/yii2-dual-listbox",
+    "description": "jQuery Dual Listbox plugin for yii2",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joel Waldock",
+            "email": "joel.c.waldock@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*",
+        "bower-asset/dual-listbox": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "jwaldock\\duallistbox\\": ""
+        }
+    }
+}
