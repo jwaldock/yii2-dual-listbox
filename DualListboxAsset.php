@@ -12,7 +12,12 @@ use yii\web\AssetBundle;
 class DualListboxAsset extends AssetBundle
 {
     public $sourcePath = '@bower/dual-listbox';
+    
     public $js = [
         'js/dual-listbox.js',
+    ];
+    
+    public $depends = [
+        'yii\bootstrap\BootstrapPluginAsset'
     ];
 }
