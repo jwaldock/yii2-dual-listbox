@@ -9,20 +9,19 @@ namespace jwaldock\duallistbox;
 use yii\web\AssetBundle;
 
 /**
- * Asset bundle for Dual Listbox.
+ * Asset bundle for Dual Listbox bootstrap style.
  *
  * @author Joel Waldock <joel.c.waldock@gmail.com>
  */
-class DualListboxAsset extends AssetBundle
+class DualListboxStyleAsset extends AssetBundle
 {
-    public $sourcePath = '@bower/dual-listbox';
-    
-    public $js = [
-        'js/dual-listbox.js',
+    public $sourcePath = '@jwaldock/duallistbox/assets';
+
+    public $css = [
+        'dual-listbox.css'
     ];
-    
+
     public $depends = [
-        'yii\web\JqueryAsset',
-        'yii\bootstrap\BootstrapAsset'
+        'jwaldock\duallistbox\DualListboxAsset'
     ];
 }

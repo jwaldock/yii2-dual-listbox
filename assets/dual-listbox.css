@@ -1,0 +1,23 @@
+/*!
+ * Dual Listbox
+ *
+ * Copyright 2016, Joel Waldock
+ */
+
+@media(min-width: 768px) {
+  div[data-role="dual-listbox"] select[data-list] {
+      min-height: 120px;
+  }	
+}
+
+div[data-role="dual-listbox"] button[data-move-to] .glyphicon + .glyphicon {
+    margin-left: -6px;
+}  
+
+div[data-role="dual-listbox"] input[data-filter] {
+    margin-bottom: 10px;
+}  
+
+div[data-role="dual-listbox"] .large-buttons:first-child {
+    margin-bottom: 15px;
+}
