@@ -21,3 +21,7 @@ div[data-role="dual-listbox"] input[data-filter] {
 div[data-role="dual-listbox"] .large-buttons:first-child {
     margin-bottom: 15px;
 }
+
+div[data-role="dual-listbox"] .small-buttons {
+    margin: 10px 0;
+}
