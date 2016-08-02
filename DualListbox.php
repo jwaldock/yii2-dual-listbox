@@ -11,103 +11,125 @@ use yii\widgets\InputWidget;
 use yii\helpers\Url;
 
 /**
- * Dual Listbox widget.
+ * Dual listbox widget.
+ * TODO class documentation
  */
 class DualListbox extends InputWidget
 {
     /**
-     *
-     * @var string
+     * @var string origin list name
      */
     const ORIGIN_LIST = 'origin';
 
     /**
-     *
-     * @var string
+     * @var string destination list name
      */
     const DEST_LIST = 'dest';
 
     /**
-     *
      * @var string
      */
     public $inputList = self::DEST_LIST;
 
     /**
-     *
-     * @var boolean
+     * @var boolean whether to render filter inputs
      */
     public $filter = true;
 
     /**
-     *
-     * @var string
+     * @var string filter placeholder text
      */
     public $filterText = 'Type to search...';
 
     /**
-     *
-     * @var boolean
+     * @var boolean whether to render showing count
      */
     public $showing = true;
 
     /**
-     *
-     * @var string
+     * @var string showing count text, e.g. "Showing 10"
      */
     public $showingText = 'Showing ';
 
     /**
-     *
-     * @var string
+     * @var string origin list label text.
+     * 
+     * The origin label will be rendered if this property is set.
      */
     public $originLabel;
 
     /**
-     *
-     * @var string
-     */
-    public $destLabel;
+     * @var string origin list label text.
+     * 
+     * The origin label will be rendered if this property is set.
+     */    public $destLabel;
 
     /**
-     *
-     * @var string
+     * @var string|array action bootstrap button class
      */
-    public $buttonClass = 'btn-default';
+    public $buttonClass = 'btn btn-default';
 
     /**
-     *
-     * @var array
+     * @var array items for the widget's list.
+     * 
+     * Array should be in the form value => label.
      */
     public $items = [];
 
     /**
-     *
+     * array|string the URL for loading origin items JSON. 
+     * 
+     * This property will be processed by [[Url::to()]].
      * @var string
      */
     public $originItemsUrl;
 
     /**
-     *
+     * array|string the URL for destination items JSON array.
+     * The JSON array should be in the format ```{ value: label } 
+     * 
+     * This property will be processed by [[Url::to()]].
      * @var string
      */
     public $destItemsUrl;
 
     /**
-     *
-     * @var boolean
+     * @var boolean whether to allow multiple selections in the lists.
      */
     public $multiSelect = true;
 
+    /**
+     * @var array Html options for the showing results span tags.
+     */
     public $showingOptions = [
         'class' => 'hidden-xs'
     ];
 
-    public $filterOptions = [];
-
     /**
-     *
-     * @return string
+     * @var array Html options for the filter inputs.
+     */
+    public $filterOptions = [];
+    
+    /**
+     * @var array Html options for the hidden list box input
+     */
+    public $options = ['class' => 'hidden', 'multiple' => true];
+    // TODO add sort and delay data attributes
+    /**
+     * @var boolean whether to sort list items
+     */
+    public $sort;
+    
+    /**
+     * @var integer filter delay in ms
+     */
+    public $delay;
+    
+    
+    /**
+     * Generates the horizontal buttons that are shown when the screen width >= 768px;
+     * 
+     * @return string 
      */
     protected function generateMainButtons()
     {
@@ -119,25 +141,25 @@ class DualListbox extends InputWidget
         ]);
         
         $oneDest = Html::button($rightIcon, [
-            'class' => 'btn btn-default',
+            'class' => $this->buttonClass,
             'data-move-to' => self::DEST_LIST,
             'data-move' => 'selected'
         ]);
         
         $allDest = Html::button($rightIcon . $rightIcon, [
-            'class' => 'btn btn-default',
+            'class' => $this->buttonClass,
             'data-move-to' => self::DEST_LIST,
             'data-move' => 'all'
         ]);
         
         $oneOrigin = Html::button($leftIcon, [
-            'class' => 'btn btn-default',
+            'class' => $this->buttonClass,
             'data-move-to' => self::ORIGIN_LIST,
             'data-move' => 'selected'
         ]);
         
         $allOrigin = Html::button($leftIcon . $leftIcon, [
-            'class' => 'btn btn-default',
+            'class' => $this->buttonClass,
             'data-move-to' => self::ORIGIN_LIST,
             'data-move' => 'all'
         ]);
@@ -149,7 +171,7 @@ class DualListbox extends InputWidget
         ]);
         $btnsOrigin = Html::tag('div', $oneOrigin . $allOrigin, [
             'class' => 'btn-group-vertical',
-            'style' => "margin-bottom: 5px; margin-top: $offset"
+            'style' => "margin-top: $offset"
         ]);
         
         return Html::tag('div', $btnsOrigin, [
@@ -160,7 +182,9 @@ class DualListbox extends InputWidget
     }
 
     /**
-     * @return string
+     * Generates the horizontal buttons that are shown when the screen width < 768px;
+     * 
+     * @return string 
      */
     protected function generateMobileButtons()
     {
@@ -172,13 +196,13 @@ class DualListbox extends InputWidget
         ]);
         
         $oneDest = Html::button($downIcon, [
-            'class' => 'btn btn-default',
+            'class' => $this->buttonClass,
             'data-move-to' => self::DEST_LIST,
             'data-move' => 'selected'
         ]);
         
         $oneOrigin = Html::button($upIcon, [
-            'class' => 'btn btn-default',
+            'class' => $this->buttonClass,
             'data-move-to' => self::ORIGIN_LIST,
             'data-move' => 'selected'
         ]);
@@ -195,10 +219,11 @@ class DualListbox extends InputWidget
     }
 
     /**
-     *
-     * @param string $name            
-     * @param string $label            
-     * @param string $itemsUrl            
+     * Generates a list box with optional label, filter input and showing count.
+     *  
+     * @param string $name list name
+     * @param string $label list label
+     * @param string $itemsUrl url to get the items JSON array    
      * @return string
      */
     protected function generateList($name, $label, $itemsUrl)
@@ -232,9 +257,7 @@ class DualListbox extends InputWidget
             $listBoxOptions['multiple'] = 'multiple';
         }
         
-        $listBox = Html::listBox(null, [], $this->items, $listBoxOptions);
-        
-        $list .= $listBox;
+        $list .= Html::listBox(null, [], $this->items, $listBoxOptions);
         
         if ($this->showing) {
             $list .= Html::tag('span', $this->showingText . Html::tag('strong', 0, [
@@ -245,32 +268,43 @@ class DualListbox extends InputWidget
     }
 
     /**
-     * @return string
+     * Register asset bundles / js.
+     * 
+     * The generated js is for passing the blur event to the hidden listbox so that blur on 
      */
-    protected function generateHiddenInputsContainer()
+    public function registerClientScript()
     {
-        if ($this->hasModel()) {
-            $name = Html::getInputName($this->model, $this->attribute);
-        } else  {
-            $name = $this->name;
-        }
-        
-        return Html::tag('div', '', ['data-list-inputs' => $this->inputList, 'data-input-name' => $name]);
+        $view = $this->getView();
+        $id = $this->options['id'];
+        $list = $this->inputList;
+        $js = "$('#$id').siblings().find('[data-list=\"$list\"]').blur(function() { $('#$id').blur(); })";
+        $view->registerJs($js);
+        $view->registerAssetBundle(DualListboxStyleAsset::className());
     }
-
+    
     /**
      * @inheritdoc
      */
     public function run()
     {
-        $content = Html::tag('div', $this->generateList(self::ORIGIN_LIST, $this->originLabel, $this->originItemsUrl), [
-            'class' => 'col-sm-5'
-        ]) . Html::tag('div', $this->generateMainButtons() . $this->generateMobileButtons(), [
-            'class' => 'col-sm-2 text-center'
-        ]) . Html::tag('div', $this->generateList(self::DEST_LIST, $this->destLabel, $this->destItemsUrl), [
-            'class' => 'col-sm-5'
-        ]) . $this->generateHiddenInputsContainer();
+        $options = $this->options;
+        $options['data-list-inputs'] = $this->inputList;
+        
+        if ($this->hasModel()) {
+            $content = Html::activeListBox($this->model, $this->attribute, $this->items, $options);
+        } else {
+            $content = Html::listBox($this->name, null, $this->items, $options);
+        }
+        
+        $content .= Html::tag('div', $this->generateList(self::ORIGIN_LIST, $this->originLabel, $this->originItemsUrl), [
+                'class' => 'col-sm-5'
+            ]) . Html::tag('div', $this->generateMainButtons() . $this->generateMobileButtons(), [
+                'class' => 'col-sm-2 text-center'
+            ]) . Html::tag('div', $this->generateList(self::DEST_LIST, $this->destLabel, $this->destItemsUrl), [
+                'class' => 'col-sm-5'
+            ]);
 
         echo Html::Tag('div', $content, ['data-role' => 'dual-listbox', 'class' => 'row']);
+        $this->registerClientScript();
     }
 }

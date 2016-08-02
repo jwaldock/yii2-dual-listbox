@@ -6,7 +6,7 @@
 
 @media(min-width: 768px) {
   div[data-role="dual-listbox"] select[data-list] {
-      min-height: 120px;
+      min-height: 140px;
   }	
 }
 
@@ -18,8 +18,8 @@ div[data-role="dual-listbox"] input[data-filter] {
     margin-bottom: 10px;
 }  
 
-div[data-role="dual-listbox"] .large-buttons:first-child {
-    margin-bottom: 15px;
+div[data-role="dual-listbox"] .large-buttons {
+    margin-bottom: 6px;
 }
 
 div[data-role="dual-listbox"] .small-buttons {
